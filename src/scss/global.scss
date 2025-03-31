@@ -1,0 +1,19 @@
+@use "src/scss/variables.scss" as *;
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100..900;1,100..900&display=swap");
+
+body {
+	margin: auto;
+}
+
+* {
+	font-family: "Roboto", sans-serif;
+	box-sizing: border-box;
+}
+
+.h-0 {
+	height: 0;
+}
+.w-0 {
+	width: 0;
+}
