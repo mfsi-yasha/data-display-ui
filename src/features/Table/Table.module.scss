@@ -1,0 +1,83 @@
+.tableCN {
+	width: 100%;
+	border-collapse: collapse;
+	border-radius: 12px;
+	overflow: hidden;
+	box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+	background-color: #fff;
+
+	.theadCN {
+		background-color: #f8fafc;
+		color: #333;
+		text-transform: uppercase;
+		font-weight: 600;
+		font-size: 14px;
+		letter-spacing: 1px;
+		padding: 10px 16px;
+	}
+
+	.trCN {
+		border-bottom: 1px solid #e2e8f0;
+	}
+
+	.thCN {
+		padding: 12px 16px;
+		text-align: left;
+		font-size: 14px;
+		font-weight: 600;
+		color: #4a5568;
+		cursor: pointer;
+		position: relative;
+		transition:
+			background-color 0.3s,
+			color 0.3s;
+
+		&:hover {
+			background-color: #edf2f7;
+			color: #2d3748;
+		}
+
+		// For sorting icon - default
+		&::after {
+			content: " ↕";
+			font-size: 12x;
+			margin-left: 8px;
+			color: #a0aec0;
+			transition: transform 0.3s ease;
+			position: absolute;
+		}
+
+		// For sorting icon - asc
+		&.asc::after {
+			content: " ↑";
+			color: #4a90e2;
+		}
+
+		// For sorting icon - desc
+		&.desc::after {
+			content: " ↓";
+			color: #4a90e2;
+		}
+	}
+
+	.tbodyCN {
+		.trCN {
+			&:nth-child(odd) {
+				background-color: #f9fafb;
+			}
+
+			&:hover {
+				background-color: #f1f5f9;
+			}
+		}
+	}
+
+	.tdCN {
+		padding: 12px 16px;
+		border-bottom: 1px solid #e2e8f0;
+		text-align: left;
+		font-size: 14px;
+		color: #4a5568;
+		transition: background-color 0.3s ease;
+	}
+}
