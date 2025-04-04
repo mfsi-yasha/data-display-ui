@@ -2,6 +2,7 @@ import { TriangleDownIcon, TriangleUpIcon } from "@radix-ui/react-icons";
 import { Flex, Table as TableR, Theme, ThemeProps } from "@radix-ui/themes";
 import { useCallback } from "react";
 import Pagination, { PaginationProps } from "../Pagination/Pagination";
+import { motion } from "framer-motion";
 
 export type TableSortBy = "asc" | "desc";
 export interface TableProps {
@@ -35,6 +36,8 @@ function TableColumnHeadings({
 		[applySort],
 	);
 
+	let animationCount = 1;
+
 	return (
 		<TableR.Root
 			variant={variant}
@@ -50,18 +53,24 @@ function TableColumnHeadings({
 							data-sort-by={heading.sort}
 							onClick={handleSort}
 						>
-							<Flex
-								gap="2"
-								justify="between"
-								align="center"
+							<motion.div
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								transition={{ duration: 0.5, delay: animationCount++ * 0.03 }}
 							>
-								<span>{heading.label}</span>
-								{heading.sort === "asc" ? (
-									<TriangleUpIcon />
-								) : (
-									<TriangleDownIcon />
-								)}
-							</Flex>
+								<Flex
+									gap="2"
+									justify="between"
+									align="center"
+								>
+									<span>{heading.label}</span>
+									{heading.sort === "asc" ? (
+										<TriangleUpIcon />
+									) : (
+										<TriangleDownIcon />
+									)}
+								</Flex>
+							</motion.div>
 						</TableR.ColumnHeaderCell>
 					))}
 				</TableR.Row>
@@ -72,7 +81,13 @@ function TableColumnHeadings({
 					<TableR.Row key={index}>
 						{headings.map(heading => (
 							<TableR.Cell key={index + heading.key}>
-								{value[heading.key]}
+								<motion.div
+									initial={{ opacity: 0 }}
+									animate={{ opacity: 1 }}
+									transition={{ duration: 0.5, delay: animationCount++ * 0.03 }}
+								>
+									{value[heading.key]}
+								</motion.div>
 							</TableR.Cell>
 						))}
 					</TableR.Row>
@@ -101,6 +116,8 @@ function TableRowHeadings({
 		[applySort],
 	);
 
+	let animationCount = 1;
+
 	return (
 		<TableR.Root
 			variant={variant}
@@ -118,22 +135,34 @@ function TableRowHeadings({
 							data-sort-by={heading.sort}
 							onClick={handleSort}
 						>
-							<Flex
-								gap="2"
-								justify="between"
-								align="center"
+							<motion.div
+								initial={{ opacity: 0 }}
+								animate={{ opacity: 1 }}
+								transition={{ duration: 0.5, delay: animationCount++ * 0.03 }}
 							>
-								<span>{heading.label}</span>
-								{heading.sort === "asc" ? (
-									<TriangleUpIcon />
-								) : (
-									<TriangleDownIcon />
-								)}
-							</Flex>
+								<Flex
+									gap="2"
+									justify="between"
+									align="center"
+								>
+									<span>{heading.label}</span>
+									{heading.sort === "asc" ? (
+										<TriangleUpIcon />
+									) : (
+										<TriangleDownIcon />
+									)}
+								</Flex>
+							</motion.div>
 						</TableR.ColumnHeaderCell>
 						{data.map((value, index) => (
 							<TableR.Cell key={index + heading.key}>
-								{value[heading.key]}
+								<motion.div
+									initial={{ opacity: 0 }}
+									animate={{ opacity: 1 }}
+									transition={{ duration: 0.5, delay: animationCount++ * 0.03 }}
+								>
+									{value[heading.key]}
+								</motion.div>
 							</TableR.Cell>
 						))}
 					</TableR.Row>
