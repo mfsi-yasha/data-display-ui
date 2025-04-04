@@ -13,9 +13,15 @@ export interface TableProps {
 	data: Array<Record<string, React.ReactNode>>;
 	applySort: (key: string, value: TableSortBy) => void;
 	variant?: "surface" | "ghost";
+	headingVariant?: "row" | "column";
 }
 
-function Table({ headings, data, applySort, variant = "surface" }: TableProps) {
+function TableColumnHeadings({
+	headings,
+	data,
+	applySort,
+	variant = "surface",
+}: TableProps) {
 	const handleSort: React.MouseEventHandler<HTMLElement> = useCallback(
 		ev => {
 			const target = ev.currentTarget;
@@ -46,7 +52,7 @@ function Table({ headings, data, applySort, variant = "surface" }: TableProps) {
 						>
 							<Flex
 								gap="2"
-								justify="start"
+								justify="between"
 								align="center"
 							>
 								<span>{heading.label}</span>
@@ -76,7 +82,68 @@ function Table({ headings, data, applySort, variant = "surface" }: TableProps) {
 	);
 }
 
-function ThemedTable({
+function TableRowHeadings({
+	headings,
+	data,
+	applySort,
+	variant = "surface",
+}: TableProps) {
+	const handleSort: React.MouseEventHandler<HTMLElement> = useCallback(
+		ev => {
+			const target = ev.currentTarget;
+			const key = target.getAttribute("data-key") as string;
+			const currentSortValue = target.getAttribute(
+				"data-sort-by",
+			) as TableSortBy;
+
+			applySort(key, currentSortValue === "asc" ? "desc" : "asc");
+		},
+		[applySort],
+	);
+
+	return (
+		<TableR.Root
+			variant={variant}
+			size="2"
+		>
+			<TableR.Body>
+				{headings.map(heading => (
+					<TableR.Row key={heading.key}>
+						<TableR.ColumnHeaderCell
+							style={{
+								cursor: "pointer",
+								borderRight: "1px solid var(--gray-a5)",
+							}}
+							data-key={heading.key}
+							data-sort-by={heading.sort}
+							onClick={handleSort}
+						>
+							<Flex
+								gap="2"
+								justify="between"
+								align="center"
+							>
+								<span>{heading.label}</span>
+								{heading.sort === "asc" ? (
+									<TriangleUpIcon />
+								) : (
+									<TriangleDownIcon />
+								)}
+							</Flex>
+						</TableR.ColumnHeaderCell>
+						{data.map((value, index) => (
+							<TableR.Cell key={index + heading.key}>
+								{value[heading.key]}
+							</TableR.Cell>
+						))}
+					</TableR.Row>
+				))}
+			</TableR.Body>
+		</TableR.Root>
+	);
+}
+
+function Table({
 	accentColor,
 	grayColor,
 	panelBackground,
@@ -88,6 +155,7 @@ function ThemedTable({
 	currentPage,
 	totalPages,
 	onPageChange,
+	headingVariant = "column",
 	...props
 }: TableProps & {
 	accentColor?: ThemeProps["accentColor"];
@@ -99,6 +167,13 @@ function ThemedTable({
 	style?: React.CSSProperties;
 	className?: string;
 } & PaginationProps) {
+	const tableComponent =
+		headingVariant === "row" ? (
+			<TableRowHeadings {...props} />
+		) : (
+			<TableColumnHeadings {...props} />
+		);
+
 	return (
 		<Theme
 			style={style}
@@ -114,7 +189,7 @@ function ThemedTable({
 				direction="column"
 				gap="2"
 			>
-				<Table {...props} />
+				{tableComponent}
 				<Pagination
 					currentPage={currentPage}
 					totalPages={15}
@@ -126,4 +201,4 @@ function ThemedTable({
 	);
 }
 
-export default ThemedTable;
+export default Table;

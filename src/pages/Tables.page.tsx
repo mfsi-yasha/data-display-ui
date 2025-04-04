@@ -88,6 +88,30 @@ function TablesPage() {
 					totalPages={15}
 					onPageChange={setCurrentPage}
 				/>
+				<Table
+					headings={headings}
+					data={data}
+					applySort={handleApplySort}
+					appearance="light"
+					variant="surface"
+					headingVariant="row"
+					style={{ padding: "0.5rem", borderRadius: "0.5rem" }}
+					currentPage={currentPage}
+					totalPages={15}
+					onPageChange={setCurrentPage}
+				/>
+				<Table
+					headings={headings}
+					data={data}
+					applySort={handleApplySort}
+					appearance="dark"
+					variant="surface"
+					headingVariant="row"
+					style={{ padding: "0.5rem", borderRadius: "0.5rem" }}
+					currentPage={currentPage}
+					totalPages={15}
+					onPageChange={setCurrentPage}
+				/>
 			</Flex>
 		</div>
 	);
