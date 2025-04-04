@@ -1,6 +1,6 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
 import { Flex, Button, Text } from "@radix-ui/themes";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useMediaQuery } from "react-responsive";
 
 export interface PaginationProps {
