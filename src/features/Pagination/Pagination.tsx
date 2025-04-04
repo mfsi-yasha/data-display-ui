@@ -1,5 +1,5 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
-import { Flex, Button, Text } from "@radix-ui/themes";
+import { Flex, Button, Text, FlexProps } from "@radix-ui/themes";
 import { useCallback, useMemo } from "react";
 import { useMediaQuery } from "react-responsive";
 
@@ -7,19 +7,43 @@ export interface PaginationProps {
 	currentPage: number;
 	totalPages: number;
 	onPageChange: (value: number) => void;
+	color?:
+		| "gray"
+		| "blue"
+		| "indigo"
+		| "red"
+		| "green"
+		| "yellow"
+		| "violet"
+		| "orange";
+	borderRadius?: "none" | "small" | "medium" | "large" | "full";
+	activeColor?:
+		| "gray"
+		| "blue"
+		| "indigo"
+		| "red"
+		| "green"
+		| "yellow"
+		| "violet"
+		| "orange";
+	alignment?: FlexProps["justify"];
 }
 
 function Pagination({
 	currentPage,
 	totalPages,
 	onPageChange,
+	color = "gray",
+	borderRadius = "full",
+	activeColor = "blue",
+	alignment = "end",
 }: PaginationProps) {
 	const isMobile = useMediaQuery({ maxWidth: 768 });
 
 	const pageNumbers = useMemo(() => {
 		const pn = [];
-		const maxVisiblePages = 5; // Adjusted based on isMobile
-		const maxAdjacentPages = isMobile ? 1 : 2; // Adjusted based on isMobile
+		const maxVisiblePages = 5;
+		const maxAdjacentPages = isMobile ? 1 : 2;
 
 		if (totalPages <= maxVisiblePages) {
 			for (let i = 1; i <= totalPages; i++) {
@@ -69,13 +93,13 @@ function Pagination({
 	return (
 		<Flex
 			align="center"
-			justify="end"
+			justify={alignment}
 			gap={isMobile ? "1" : "2"}
 		>
 			<Button
 				variant="soft"
-				color="indigo"
-				radius="full"
+				color={color}
+				radius={borderRadius}
 				onClick={() => handlePageClick("<")}
 				disabled={currentPage === 1}
 				size={isMobile ? "1" : "2"}
@@ -86,8 +110,8 @@ function Pagination({
 				<Button
 					key={index}
 					variant={currentPage === page ? "solid" : "soft"}
-					color={currentPage === page ? "blue" : "gray"}
-					radius="full"
+					color={currentPage === page ? activeColor : color}
+					radius={borderRadius}
 					onClick={() => handlePageClick(page + "")}
 					disabled={page === "..."}
 					size={isMobile ? "1" : "2"}
@@ -97,8 +121,8 @@ function Pagination({
 			))}
 			<Button
 				variant="soft"
-				color="indigo"
-				radius="full"
+				color={color}
+				radius={borderRadius}
 				onClick={() => handlePageClick(">")}
 				disabled={currentPage === totalPages}
 				size={isMobile ? "1" : "2"}

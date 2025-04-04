@@ -189,7 +189,6 @@ function AnimatedContent({
 
 	useEffect(() => {
 		controls.set({ opacity: 0, transition: { duration: 0, delay: 0 } });
-		console.log(animationCount[tableId]);
 		controls.start({
 			opacity: 1,
 			transition: {
