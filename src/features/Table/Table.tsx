@@ -3,6 +3,7 @@ import { Flex, Table as TableR, Theme, ThemeProps } from "@radix-ui/themes";
 import { useCallback } from "react";
 import Pagination, { PaginationProps } from "../Pagination/Pagination";
 import { motion } from "framer-motion";
+import styles from "./Table.module.scss";
 
 export type TableSortBy = "asc" | "desc";
 export interface TableProps {
@@ -78,7 +79,10 @@ function TableColumnHeadings({
 
 			<TableR.Body>
 				{data.map((value, index) => (
-					<TableR.Row key={index}>
+					<TableR.Row
+						className={`${styles.tableRowHover}`}
+						key={index}
+					>
 						{headings.map(heading => (
 							<TableR.Cell key={index + heading.key}>
 								<motion.div
@@ -160,6 +164,12 @@ function TableRowHeadings({
 									initial={{ opacity: 0 }}
 									animate={{ opacity: 1 }}
 									transition={{ duration: 0.5, delay: animationCount++ * 0.03 }}
+									whileHover={{
+										scale: 1.05,
+										boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.2)",
+										transition: { duration: 0.2 },
+									}}
+									whileTap={{ scale: 0.95 }}
 								>
 									{value[heading.key]}
 								</motion.div>
