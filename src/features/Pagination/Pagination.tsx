@@ -16,10 +16,6 @@ function Pagination({
 }: PaginationProps) {
 	const isMobile = useMediaQuery({ maxWidth: 768 });
 
-	useEffect(() => {
-		console.log(isMobile);
-	}, [isMobile]);
-
 	const pageNumbers = useMemo(() => {
 		const pn = [];
 		const maxVisiblePages = 5; // Adjusted based on isMobile
