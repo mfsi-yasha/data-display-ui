@@ -13,6 +13,11 @@ function HomePage() {
 								<Link to={"/tables"}>Tables</Link>
 							</h4>
 						</li>
+						<li>
+							<h4 style={{ cursor: "pointer" }}>
+								<Link to={"/pagination"}>Pagination</Link>
+							</h4>
+						</li>
 					</ul>
 				</li>
 			</ul>

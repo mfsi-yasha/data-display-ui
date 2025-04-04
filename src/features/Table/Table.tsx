@@ -1,7 +1,9 @@
 import { TriangleDownIcon, TriangleUpIcon } from "@radix-ui/react-icons";
 import { Flex, Table as TableR, Theme, ThemeProps } from "@radix-ui/themes";
-import { useCallback } from "react";
+import { useCallback, useEffect, useId } from "react";
 import Pagination, { PaginationProps } from "../Pagination/Pagination";
+import { motion, useAnimation } from "framer-motion";
+import styles from "./Table.module.scss";
 
 export type TableSortBy = "asc" | "desc";
 export interface TableProps {
@@ -16,12 +18,17 @@ export interface TableProps {
 	headingVariant?: "row" | "column";
 }
 
+const animationCount: Record<string, number> = {};
+
 function TableColumnHeadings({
 	headings,
 	data,
 	applySort,
 	variant = "surface",
 }: TableProps) {
+	const tableId = useId();
+	animationCount[tableId] = 0;
+
 	const handleSort: React.MouseEventHandler<HTMLElement> = useCallback(
 		ev => {
 			const target = ev.currentTarget;
@@ -50,18 +57,24 @@ function TableColumnHeadings({
 							data-sort-by={heading.sort}
 							onClick={handleSort}
 						>
-							<Flex
-								gap="2"
-								justify="between"
-								align="center"
-							>
-								<span>{heading.label}</span>
-								{heading.sort === "asc" ? (
-									<TriangleUpIcon />
-								) : (
-									<TriangleDownIcon />
-								)}
-							</Flex>
+							<AnimatedContent
+								tableId={tableId}
+								changeKey={`${heading.label}_${heading.sort}`}
+								content={
+									<Flex
+										gap="2"
+										justify="between"
+										align="center"
+									>
+										<span>{heading.label}</span>
+										{heading.sort === "asc" ? (
+											<TriangleUpIcon />
+										) : (
+											<TriangleDownIcon />
+										)}
+									</Flex>
+								}
+							/>
 						</TableR.ColumnHeaderCell>
 					))}
 				</TableR.Row>
@@ -69,10 +82,17 @@ function TableColumnHeadings({
 
 			<TableR.Body>
 				{data.map((value, index) => (
-					<TableR.Row key={index}>
+					<TableR.Row
+						className={`${styles.tableRowHover}`}
+						key={index}
+					>
 						{headings.map(heading => (
 							<TableR.Cell key={index + heading.key}>
-								{value[heading.key]}
+								<AnimatedContent
+									tableId={tableId}
+									changeKey={value[heading.key]?.toString() ?? ""}
+									content={value[heading.key]}
+								/>
 							</TableR.Cell>
 						))}
 					</TableR.Row>
@@ -88,6 +108,9 @@ function TableRowHeadings({
 	applySort,
 	variant = "surface",
 }: TableProps) {
+	const tableId = useId();
+	animationCount[tableId] = 0;
+
 	const handleSort: React.MouseEventHandler<HTMLElement> = useCallback(
 		ev => {
 			const target = ev.currentTarget;
@@ -118,28 +141,71 @@ function TableRowHeadings({
 							data-sort-by={heading.sort}
 							onClick={handleSort}
 						>
-							<Flex
-								gap="2"
-								justify="between"
-								align="center"
-							>
-								<span>{heading.label}</span>
-								{heading.sort === "asc" ? (
-									<TriangleUpIcon />
-								) : (
-									<TriangleDownIcon />
-								)}
-							</Flex>
+							<AnimatedContent
+								tableId={tableId}
+								changeKey={`${heading.label}_${heading.sort}`}
+								content={
+									<Flex
+										gap="2"
+										justify="between"
+										align="center"
+									>
+										<span>{heading.label}</span>
+										{heading.sort === "asc" ? (
+											<TriangleUpIcon />
+										) : (
+											<TriangleDownIcon />
+										)}
+									</Flex>
+								}
+							/>
 						</TableR.ColumnHeaderCell>
 						{data.map((value, index) => (
 							<TableR.Cell key={index + heading.key}>
-								{value[heading.key]}
+								<AnimatedContent
+									tableId={tableId}
+									changeKey={value[heading.key]?.toString() ?? ""}
+									content={value[heading.key]}
+								/>
 							</TableR.Cell>
 						))}
 					</TableR.Row>
 				))}
 			</TableR.Body>
 		</TableR.Root>
+	);
+}
+
+function AnimatedContent({
+	content,
+	changeKey,
+	tableId,
+}: {
+	content: React.ReactNode;
+	changeKey: string;
+	tableId: string;
+}) {
+	const controls = useAnimation();
+
+	useEffect(() => {
+		controls.set({ opacity: 0, transition: { duration: 0, delay: 0 } });
+		controls.start({
+			opacity: 1,
+			transition: {
+				duration: 0.5,
+				delay: animationCount[tableId] * 0.03,
+			},
+		});
+		animationCount[tableId]++;
+	}, [changeKey, tableId, controls]);
+
+	return (
+		<motion.div
+			initial={{ opacity: 0 }}
+			animate={controls}
+		>
+			{content}
+		</motion.div>
 	);
 }
 
