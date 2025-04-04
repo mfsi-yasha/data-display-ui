@@ -1,64 +1,76 @@
-import { useMemo } from "react";
-import styles from "./Table.module.scss";
+import { TriangleDownIcon, TriangleUpIcon } from "@radix-ui/react-icons";
+import { Flex, Table as TableR } from "@radix-ui/themes";
+import { useCallback } from "react";
 
+export type TableSortBy = "asc" | "desc";
 export interface TableProps {
-	allClassNames?: {
-		tableCN?: string;
-		tableCNFixed?: string;
-		theadCN?: string;
-		theadCNFixed?: string;
-		tbodyCN?: string;
-		tbodyCNFixed?: string;
-		trCN?: string;
-		trCNFixed?: string;
-		thCN?: string;
-		thCNFixed?: string;
-		tdCN?: string;
-		tdCNFixed?: string;
-	};
+	headings: Array<{
+		label: React.ReactNode;
+		key: string;
+		sort: TableSortBy;
+	}>;
+	data: Array<Record<string, React.ReactNode>>;
+	applySort: (key: string, value: TableSortBy) => void;
 }
 
-function Table({ allClassNames }: TableProps) {
-	const data = [
-		{ name: "Soumya", age: 26, country: "Odisha" },
-		{ name: "Aditya", age: 25, country: "Bihar" },
-		{ name: "Sourav", age: 24, country: "MP" },
-		{ name: "Akash", age: 27, country: "UP" },
-	];
+function Table({ headings, data, applySort }: TableProps) {
+	const handleSort: React.MouseEventHandler<HTMLElement> = useCallback(
+		ev => {
+			const target = ev.currentTarget;
+			const key = target.getAttribute("data-key") as string;
+			const currentSortValue = target.getAttribute(
+				"data-sort-by",
+			) as TableSortBy;
 
-	const reslovedClassNames = useMemo(() => {
-		return {
-			tableCN: `${allClassNames?.tableCNFixed ?? styles.tableCN ?? ""} ${allClassNames?.tableCN ?? ""}`,
-			theadCN: `${allClassNames?.theadCNFixed ?? styles.theadCN ?? ""} ${allClassNames?.theadCN ?? ""}`,
-			tbodyCN: `${allClassNames?.tbodyCNFixed ?? styles.tbodyCN ?? ""} ${allClassNames?.tbodyCN ?? ""}`,
-			trCN: `${allClassNames?.trCNFixed ?? styles.trCN ?? ""} ${allClassNames?.trCN ?? ""}`,
-			thCN: `${allClassNames?.thCNFixed ?? styles.thCN ?? ""} ${allClassNames?.thCN ?? ""}`,
-			tdCN: `${allClassNames?.tdCNFixed ?? styles.tdCN ?? ""} ${allClassNames?.tdCN ?? ""}`,
-		};
-	}, [allClassNames]);
+			applySort(key, currentSortValue === "asc" ? "desc" : "asc");
+		},
+		[applySort],
+	);
 
 	return (
-		<table className={reslovedClassNames.tableCN}>
-			<thead className={reslovedClassNames.theadCN}>
-				<tr className={reslovedClassNames.trCN}>
-					<th className={reslovedClassNames.thCN}>Name</th>
-					<th className={`${reslovedClassNames.thCN} ${styles.asc}`}>Age</th>
-					<th className={`${reslovedClassNames.thCN} ${styles.desc}`}>State</th>
-				</tr>
-			</thead>
-			<tbody className={reslovedClassNames.tbodyCN}>
-				{data.map((row, index) => (
-					<tr
-						className={reslovedClassNames.trCN}
-						key={index}
-					>
-						<td className={reslovedClassNames.tdCN}>{row.name}</td>
-						<td className={reslovedClassNames.tdCN}>{row.age}</td>
-						<td className={reslovedClassNames.tdCN}>{row.country}</td>
-					</tr>
+		<TableR.Root
+			variant="surface"
+			size="2"
+		>
+			<TableR.Header>
+				<TableR.Row>
+					{headings.map(heading => (
+						<TableR.ColumnHeaderCell
+							key={heading.key}
+							style={{ cursor: "pointer" }}
+							data-key={heading.key}
+							data-sort-by={heading.sort}
+							onClick={handleSort}
+						>
+							<Flex
+								gap="2"
+								justify="start"
+								align="center"
+							>
+								<span>{heading.label}</span>
+								{heading.sort === "asc" ? (
+									<TriangleUpIcon />
+								) : (
+									<TriangleDownIcon />
+								)}
+							</Flex>
+						</TableR.ColumnHeaderCell>
+					))}
+				</TableR.Row>
+			</TableR.Header>
+
+			<TableR.Body>
+				{data.map((value, index) => (
+					<TableR.Row key={index}>
+						{headings.map(heading => (
+							<TableR.Cell key={index + heading.key}>
+								{value[heading.key]}
+							</TableR.Cell>
+						))}
+					</TableR.Row>
 				))}
-			</tbody>
-		</table>
+			</TableR.Body>
+		</TableR.Root>
 	);
 }
 
