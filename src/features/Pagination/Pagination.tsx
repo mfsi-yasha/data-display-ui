@@ -1,31 +1,16 @@
 import { ChevronLeftIcon, ChevronRightIcon } from "@radix-ui/react-icons";
-import { Flex, Button, Text, FlexProps } from "@radix-ui/themes";
+import { Flex, Button, Text, FlexProps, ButtonProps } from "@radix-ui/themes";
 import { useCallback, useMemo } from "react";
 import { useMediaQuery } from "react-responsive";
+import styles from "./Pagination.module.scss";
 
 export interface PaginationProps {
 	currentPage: number;
 	totalPages: number;
 	onPageChange: (value: number) => void;
-	color?:
-		| "gray"
-		| "blue"
-		| "indigo"
-		| "red"
-		| "green"
-		| "yellow"
-		| "violet"
-		| "orange";
-	borderRadius?: "none" | "small" | "medium" | "large" | "full";
-	activeColor?:
-		| "gray"
-		| "blue"
-		| "indigo"
-		| "red"
-		| "green"
-		| "yellow"
-		| "violet"
-		| "orange";
+	color?: ButtonProps["color"];
+	borderRadius?: ButtonProps["radius"];
+	activeColor?: ButtonProps["color"];
 	alignment?: FlexProps["justify"];
 }
 
@@ -97,6 +82,9 @@ function Pagination({
 			gap={isMobile ? "1" : "2"}
 		>
 			<Button
+				className={`${styles.button} ${styles.chevronButton} ${
+					currentPage === 1 ? styles.disabledButton : ""
+				}`}
 				variant="soft"
 				color={color}
 				radius={borderRadius}
@@ -109,6 +97,9 @@ function Pagination({
 			{pageNumbers.map((page, index) => (
 				<Button
 					key={index}
+					className={`${styles.button} ${
+						currentPage === page ? styles.activeButton : ""
+					} ${page === "..." ? styles.disabledButton : ""}`}
 					variant={currentPage === page ? "solid" : "soft"}
 					color={currentPage === page ? activeColor : color}
 					radius={borderRadius}
@@ -116,10 +107,18 @@ function Pagination({
 					disabled={page === "..."}
 					size={isMobile ? "1" : "2"}
 				>
-					<Text size={isMobile ? "1" : "2"}>{page}</Text>
+					<Text
+						className={styles.text}
+						size={isMobile ? "1" : "2"}
+					>
+						{page}
+					</Text>
 				</Button>
 			))}
 			<Button
+				className={`${styles.button} ${styles.chevronButton} ${
+					currentPage === totalPages ? styles.disabledButton : ""
+				}`}
 				variant="soft"
 				color={color}
 				radius={borderRadius}
