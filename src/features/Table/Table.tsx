@@ -1,6 +1,7 @@
 import { TriangleDownIcon, TriangleUpIcon } from "@radix-ui/react-icons";
-import { Flex, Table as TableR } from "@radix-ui/themes";
+import { Flex, Table as TableR, Theme, ThemeProps } from "@radix-ui/themes";
 import { useCallback } from "react";
+import Pagination, { PaginationProps } from "../Pagination/Pagination";
 
 export type TableSortBy = "asc" | "desc";
 export interface TableProps {
@@ -11,9 +12,10 @@ export interface TableProps {
 	}>;
 	data: Array<Record<string, React.ReactNode>>;
 	applySort: (key: string, value: TableSortBy) => void;
+	variant?: "surface" | "ghost";
 }
 
-function Table({ headings, data, applySort }: TableProps) {
+function Table({ headings, data, applySort, variant = "surface" }: TableProps) {
 	const handleSort: React.MouseEventHandler<HTMLElement> = useCallback(
 		ev => {
 			const target = ev.currentTarget;
@@ -29,7 +31,7 @@ function Table({ headings, data, applySort }: TableProps) {
 
 	return (
 		<TableR.Root
-			variant="surface"
+			variant={variant}
 			size="2"
 		>
 			<TableR.Header>
@@ -74,4 +76,54 @@ function Table({ headings, data, applySort }: TableProps) {
 	);
 }
 
-export default Table;
+function ThemedTable({
+	accentColor,
+	grayColor,
+	panelBackground,
+	scaling,
+	radius,
+	appearance,
+	style,
+	className,
+	currentPage,
+	totalPages,
+	onPageChange,
+	...props
+}: TableProps & {
+	accentColor?: ThemeProps["accentColor"];
+	grayColor?: ThemeProps["grayColor"];
+	panelBackground?: ThemeProps["panelBackground"];
+	scaling?: ThemeProps["scaling"];
+	radius?: ThemeProps["radius"];
+	appearance?: ThemeProps["appearance"];
+	style?: React.CSSProperties;
+	className?: string;
+} & PaginationProps) {
+	return (
+		<Theme
+			style={style}
+			className={className}
+			accentColor={accentColor}
+			grayColor={grayColor}
+			panelBackground={panelBackground}
+			scaling={scaling}
+			radius={radius}
+			appearance={appearance}
+		>
+			<Flex
+				direction="column"
+				gap="2"
+			>
+				<Table {...props} />
+				<Pagination
+					currentPage={currentPage}
+					totalPages={15}
+					onPageChange={onPageChange}
+				/>
+				<div></div>
+			</Flex>
+		</Theme>
+	);
+}
+
+export default ThemedTable;

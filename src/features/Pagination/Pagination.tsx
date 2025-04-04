@@ -3,15 +3,17 @@ import { Flex, Button, Text } from "@radix-ui/themes";
 import { useCallback, useEffect, useMemo } from "react";
 import { useMediaQuery } from "react-responsive";
 
+export interface PaginationProps {
+	currentPage: number;
+	totalPages: number;
+	onPageChange: (value: number) => void;
+}
+
 function Pagination({
 	currentPage,
 	totalPages,
 	onPageChange,
-}: {
-	currentPage: number;
-	totalPages: number;
-	onPageChange: (value: number) => void;
-}) {
+}: PaginationProps) {
 	const isMobile = useMediaQuery({ maxWidth: 768 });
 
 	useEffect(() => {

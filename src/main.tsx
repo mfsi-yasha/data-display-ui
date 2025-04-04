@@ -12,7 +12,7 @@ createRoot(document.querySelector("app")!).render(
 			panelBackground="solid"
 			scaling="100%"
 			radius="medium"
-			appearance="dark"
+			appearance="light"
 		>
 			<App />
 		</Theme>

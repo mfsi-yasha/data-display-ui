@@ -1,9 +1,8 @@
 import { Flex } from "@radix-ui/themes";
 import { useCallback, useMemo, useState } from "react";
 import { Link } from "react-router";
-import tableStatic from "src/data/table.static";
-import Pagination from "src/features/Pagination/Pagination";
 import Table, { TableSortBy } from "src/features/Table/Table";
+import tableStatic from "src/data/table.static";
 
 function TablesPage() {
 	const [currentPage, setCurrentPage] = useState(1);
@@ -43,14 +42,48 @@ function TablesPage() {
 			</div>
 			<Flex
 				direction="column"
-				gap="2"
+				gap="9"
 			>
 				<Table
 					headings={headings}
 					data={data}
 					applySort={handleApplySort}
+					appearance="light"
+					variant="ghost"
+					style={{ padding: "0.5rem", borderRadius: "0.5rem" }}
+					currentPage={currentPage}
+					totalPages={15}
+					onPageChange={setCurrentPage}
 				/>
-				<Pagination
+				<Table
+					headings={headings}
+					data={data}
+					applySort={handleApplySort}
+					appearance="light"
+					variant="surface"
+					style={{ padding: "0.5rem", borderRadius: "0.5rem" }}
+					currentPage={currentPage}
+					totalPages={15}
+					onPageChange={setCurrentPage}
+				/>
+				<Table
+					headings={headings}
+					data={data}
+					applySort={handleApplySort}
+					appearance="dark"
+					variant="ghost"
+					style={{ padding: "0.5rem", borderRadius: "0.5rem" }}
+					currentPage={currentPage}
+					totalPages={15}
+					onPageChange={setCurrentPage}
+				/>
+				<Table
+					headings={headings}
+					data={data}
+					applySort={handleApplySort}
+					appearance="dark"
+					variant="surface"
+					style={{ padding: "0.5rem", borderRadius: "0.5rem" }}
 					currentPage={currentPage}
 					totalPages={15}
 					onPageChange={setCurrentPage}
